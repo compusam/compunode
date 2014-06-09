@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  #disconected
+    p Desconectado!
+  #connected.hide
+    p Conectado!
+  input(type='button', value='Enviar pulsacion')
+ 
+  script
+    //#1 Declaramos el objeto socket que se conectar en este caso a localhost
+    var socket = io.connect(window.location.hostname);
+ 
+    //#2 Función que muestra un mensaje u otro, dependiendo de la conexin.
+    function toggle(){
+      $("#disconected").toggleClass("hide");
+      $("#connected").toggleClass("hide");
+    }
+ 
+    //#3 Si estamos conectados, muestra el log y cambia el mensaje
+    socket.on('connected', function (data) {
+      var currentTime = new Date();
+      console.log('Conectado!' + currentTime);
+      console.log(data);  
+      toggle();
+    });
+ 
+    //#4 Si nos desconectamos, muestra el log y cambia el mensaje.
+    socket.on('disconnect', function () {
+      console.log('Desconectado!');
+      toggle();
+      });
